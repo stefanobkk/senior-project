@@ -84,6 +84,7 @@
 </template>
 
 <script>
+console.log('Hello to the world')
 export default {
   name: 'HelloWorld',
   data () {
