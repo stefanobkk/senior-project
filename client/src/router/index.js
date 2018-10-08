@@ -2,15 +2,18 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Register from '@/components/Register'
 import Login from '@/components/Login'
-import DataTest from '@/components/DataTest'
+import Trade from '@/components/Trade'
+import Homepage from '@/components/Homepage'
+import Myaccounts from '@/components/MyAccounts'
+import Mybalance from '@/components/MyBalance'
 
 Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'datatest',
-      component: DataTest
+      path: '/homepage',
+      name: 'homepage',
+      component: Homepage
     },
     {
       path: '/register',
@@ -21,6 +24,22 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/trade/:symbols',
+      name: 'trade',
+      component: Trade,
+      props: true
+    },
+    {
+      path: '/myaccount',
+      name: 'myaccount',
+      component: Myaccounts
+    },
+    {
+      path: '/mybalance',
+      name: 'mybalance',
+      component: Mybalance
     }
   ]
 })
