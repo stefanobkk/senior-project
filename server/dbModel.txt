@@ -1,6 +1,0 @@
-User has many API Keys
-
-User has many Alarms
-
-User has many Conditional Trades
-

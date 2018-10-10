@@ -15,18 +15,20 @@ module.exports = {
         console.error(err)
       })
   },
+
   async getBalance (req, res) {
     binanceRest.account({
     })
       .then((data) => {
         res.send({
-          something: data.balances
+          userBalance: data.balances
         })
       })
       .catch((err) => {
         console.error(err)
       })
   },
+
   async getPriceSingle (req, res) {
     binanceRest.tickerPrice({
       symbol: req.query.symbol
@@ -34,36 +36,70 @@ module.exports = {
       .then((data) => {
         console.log(data.price)
         res.send({
-          something: data.price
+          singleCoinPrice: data.price
+        })
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+  },
+
+  async tradeMaker (req, res) {
+    switch (req.query.tradeType) {
+      case 'LIMIT':
+        binanceRest.newOrder({
+          symbol: req.query.symbol,
+          side: req.query.side,
+          type: req.query.tradeType,
+          timeInForce: 'GTC',
+          quantity: req.query.quantity,
+          price: req.query.price
+        })
+          .then((data) => {
+            res.send({
+              tradeMakerData: data
+            })
+          })
+          .catch((err) => {
+            console.error(err)
+          })
+        break
+      case 'STOP_LOSS_LIMIT':
+        console.log('Note that Trigger price has to be more than currentprice')
+        binanceRest.newOrder({
+          symbol: req.query.symbol,
+          side: req.query.side,
+          type: 'STOP_LOSS_LIMIT',
+          timeInForce: 'GTC',
+          quantity: req.query.quantity,
+          price: req.query.price,
+          stopPrice: req.query.stopPrice
+        })
+          .then((data) => {
+            console.log(data)
+            res.send({
+              tradeMakerData: data
+            })
+          })
+          .catch((err) => {
+            console.error(err)
+          })
+        break
+    }
+  },
+  async queryUserOrder (req, res) {
+    binanceRest.queryOrder({
+      symbol: req.query.symbol,
+      orderId: 11725467
+    })
+      .then((data) => {
+        console.log(data)
+        res.send({
+          UserOrder: data
         })
       })
       .catch((err) => {
         console.error(err)
       })
   }
-// async binance (req, res) {
-//   binanceWS.onTrade(req.query.symbol, (data) => {
-//     var numberofOrders = 1
-//     var currICXprice = data.price.toString()
-//     if (currICXprice <= '0.6780' && numberofOrders <= 1) {
-//       binanceRest.newOrder({
-//         symbol: req.query.symbol,
-//         side: 'BUY',
-//         type: 'LIMIT',
-//         timeInForce: 'GTC',
-//         quantity: '100',
-//         price: '0.5'
-//       })
-//         .then((data) => {
-//           res.send({
-//             something: data.price
-//           })
-//         })
-//       numberofOrders += 1
-//         .catch((err) => {
-//           console.error(err)
-//         })
-//     }
-//   })
-// },
 }

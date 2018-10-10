@@ -66,7 +66,7 @@ export default {
       try {
         await AuthenticationService.getMyAccountData()
           .then(response => {
-            var data = response.data.something
+            var data = response.data.userBalance
             console.log(data)
             var i
             for (i = 0; i < data.length; i++) {

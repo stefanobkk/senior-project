@@ -1,0 +1,46 @@
+User has many API Keys
+
+User has many Alarms
+
+User has many Conditional Trades
+
+
+
+Todo
+- Navigation from homepage clicking on the row and it linking to trade/:exchange/:symbol
+- Make the datatable on the homepage either scrollable or infinitely long. Navigations look bad.
+- (Completed)Navigation straight to the coin ie. the user enters straight into the url
+- Cannot navigate out of /trade if clicking the tabs in the header.
+- Start programming for alerts and conditional trading
+  - Set up the rules for trading.
+  - The user will first select the market they want to trade then select 
+  - 1)First need to display their current balance from the exchange they choose to trade from
+  - 2)
+
+
+
+Frontpage
+- Have a banner with a search bar that iterates through all the exchanges and looks for that coin.
+  - If we have the coin we show a drop down scrollable menu directly under the search bar that displays
+  => ICXUSDT  0.681  Binance
+  => ICXUSDT  0.683  Kraken
+  => ICXUSDT  0.683  Coinbase
+AND
+- Turn the datatable into a nested datatable where exchanges are at the top and coins are second.
+- If there is time can have a compare function where you can compare the same coins ICX/USDT togehter. 
+
+
+Tradepage
+Left
+- The nagivation system will be similar to that of coinigy, a scrollable table on the left side of the screen. 
+  - Exhanges -> Coins where the data only refreshes when the user clicks on the coin and not the exchange. 
+  - Clicking on the exchange will only display the coins that are in that particular exchange.
+Center-Right
+- The trading system. Will be made up of 2 tabs (Data and Trade)
+Data
+- Order List
+- Historical Trade 
+Trade
+- 
+
+

@@ -58,7 +58,7 @@
     </v-layout>
     <br>
     <br>
-    <v-tabs
+      <v-tabs
         v-model="active"
         color="cyan"
         dark
@@ -91,13 +91,15 @@
                 :headers="headers"
                 :items="binanceDataArray"
                 :search="search">
-                <template slot="items" slot-scope="props">
-                  <td class="text-xs-left">{{ props.item.symbol }}</td>
-                  <td class="text-xs-left">{{ props.item.lastPrice }}</td>
-                  <td class="text-xs-left">{{ props.item.priceChangePercent }}</td>
-                  <td class="text-xs-left">{{ props.item.volume }}</td>
-                  <td class="text-xs-left">{{ props.item.weightedAvgPrice }}</td>
-                </template>
+                  <template slot="items" slot-scope="props">
+                    <tr @click="toTradeRouter(props.item.symbol)">
+                    <td class="text-xs-left">{{ props.item.symbol }}</td>
+                    <td class="text-xs-left">{{ props.item.lastPrice }}</td>
+                    <td class="text-xs-left">{{ props.item.priceChangePercent }}</td>
+                    <td class="text-xs-left">{{ props.item.volume }}</td>
+                    <td class="text-xs-left">{{ props.item.weightedAvgPrice }}</td>
+                    </tr>
+                  </template>
                 <v-alert slot="no-results" :value="true" color="error" icon="warning">
                   Your search for "{{ search }}" found no results.
                 </v-alert>
@@ -107,11 +109,6 @@
           </v-card>
         </v-tab-item>
       </v-tabs>
-      <v-btn flat>
-        <router-link :to="{ name: 'trade', params: { symbols: testSymbol} }" >
-          To Trades
-        </router-link>
-      </v-btn>
     <br>
   </v-container>
 </template>
@@ -124,7 +121,6 @@ export default {
   data () {
     return {
       symbol: '',
-      testSymbol: 'ICXUSDT',
       price: '',
       volume: '',
       data: null,
@@ -156,6 +152,9 @@ export default {
       } catch (err) {
         this.errormessage = err.response.data.something
       }
+    },
+    toTradeRouter (id) {
+      this.$router.push({ name: 'trade', params: { symbols: id } })
     }
   },
   beforeMount () {

@@ -1,72 +1,197 @@
 <template>
-  <v-container grid-list-md>
-    <v-layout column wrap>
-      <p> http://localhost:8080/#/trades/binance/ETH_USDT</p>
-      <v-flex xs6>
-        <div class = "white elevation-4">
-          <v-toolbar dark class="orange">
-            <v-toolbar-title class="white--text">Trade</v-toolbar-title>
-          </v-toolbar>
-          <v-layout row>
-            <v-flex xs6>
-              <p> Buy</p>
-              <v-text-field
-                color="blue"
-                label="Symbol"
-                v-model="symbol"
-                placeholder="symbol">
-                </v-text-field>
-              <v-text-field
-                color="blue"
-                label="Quantity"
-                v-model="quantity"
-                placeholder="quantity">
-                </v-text-field>
-              <v-text-field
-                color="blue"
-                label="PriceAction"
-                v-model="priceaction"
-                placeholder="priceaction">
-                </v-text-field>
-              <br>
-              <p v-html="price" class="something">
-              </p>
-              <v-btn class="white--text" @click="binance"> Binance </v-btn>
-              <br>
-            </v-flex>
-            <v-flex xs6 offset-xs3>
-              <p> Sell</p>
-              <v-text-field
-                color="blue"
-                label="Symbol"
-                v-model="symbol"
-                placeholder="symbol">
-                </v-text-field>
-              <v-text-field
-                color="blue"
-                label="Quantity"
-                v-model="quantity"
-                placeholder="quantity">
-                </v-text-field>
-              <v-text-field
-                color="blue"
-                label="PriceAction"
-                v-model="priceaction"
-                placeholder="priceaction">
-                </v-text-field>
-              <br>
-              <p v-html="price" class="something">
-              </p>
-              <v-btn class="white--text" @click="binance"> Binance </v-btn>
-              <br>
-            </v-flex>
-          </v-layout>
-          <div> {{ message }} </div>
-        </div>
-      </v-flex>
-    </v-layout>
-  </v-container>
+  <div class = "white elevation-4">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+    <v-toolbar dark class="orange">
+      <v-toolbar-title class="white--text">Exchange, price, volume, </v-toolbar-title>
+    </v-toolbar>
+    <v-container fluid>
+      <v-layout row wrap>
+        <v-layout column wrap>
+          <v-flex xs12>
+            <v-combobox
+              v-model="x"
+              :items="items"
+              label="Select Market Type"
+            ></v-combobox>
+          </v-flex>
+        </v-layout>
+        <v-layout column wrap>
+          <v-flex xs12>
+            <v-combobox
+              :items="compareCoinPrice"
+              label="Compare Coins"
+            ></v-combobox>
+          </v-flex>
+        </v-layout>
+        <v-flex>
+        </v-flex>
+      </v-layout>
+      <v-card flat>
+        <v-card-text>
+          <div v-show="x === 'Limit'">
+            <v-layout row>
+              <v-flex xs6>
+                <v-card class="test">
+                  <h3> Buy </h3>
+                  <p>available Balance</p>
+                  <p> {{ AvailableBuyBalance }}</p>
+                  <v-layout row>
+                    <v-flex>
+                      <v-subheader>Buy Price</v-subheader>
+                    </v-flex>
+                    <v-flex>
+                      <v-text-field
+                        color="blue"
+                        v-model="buyPrice"
+                        placeholder=":buyPrice">
+                      </v-text-field>
+                    </v-flex>
 
+                    <v-flex>
+                      <v-subheader>Amount</v-subheader>
+                    </v-flex>
+                    <v-flex>
+                      <v-text-field
+                        color="blue"
+                        v-model="buyQuantity">
+                      </v-text-field>
+                    </v-flex>
+                    <v-flex>
+                      <v-subheader>Total</v-subheader>
+                    </v-flex>
+                    <v-flex>
+                      <v-text-field
+                        color="blue"
+                        v-model="computeBuyTotal">
+                      </v-text-field>
+                    </v-flex>
+                  </v-layout>
+                  <br>
+                  <v-btn @click="buytradeSubmit"> Buy </v-btn>
+                  <br>
+                </v-card>
+              </v-flex>
+              <v-flex xs6>
+                <v-card class="test">
+                  <h3> Sell </h3>
+                  <p>Available Balance</p>
+                  <p> {{ AvailableSellBalance }}</p>
+                  <v-text-field
+                    color="blue"
+                    label="Sell Price"
+                    v-model="sellPrice"
+                    placeholder=":sellPrice">>
+                    </v-text-field>
+                  <v-text-field
+                    color="blue"
+                    label="Trigger Sell Price"
+                    v-model="sellTriggerPrice">
+                    </v-text-field>
+                  <v-text-field
+                    color="blue"
+                    label="Amount"
+                    v-model="sellQuantity">
+                    </v-text-field>
+                  <v-text-field
+                    color="blue"
+                    label="Total"
+                    v-model="computeSellTotal">
+                    </v-text-field>
+                  <br>
+                  <v-btn @click="selltradeSubmit"> Sell </v-btn>
+                  <br>
+                </v-card>
+              </v-flex>
+            </v-layout>
+          </div>
+          <div v-show="x === 'Stop_Loss_Limit'">
+            <v-layout row>
+              <v-flex xs6>
+                <v-card class="test">
+                  <h3> Buy </h3>
+                  <p>available Balance</p>
+                  <p> {{ AvailableBuyBalance }}</p>
+                  <v-layout row>
+                    <v-flex>
+                      <v-subheader>Buy Price</v-subheader>
+                    </v-flex>
+                    <v-flex>
+                      <v-text-field
+                        color="blue"
+                        v-model="buyPrice"
+                        placeholder=":buyPrice">
+                      </v-text-field>
+                    </v-flex>
+                    <v-flex>
+                      <v-subheader>Trigger Buy Price</v-subheader>
+                    </v-flex>
+                    <v-flex>
+                      <v-text-field
+                        color="blue"
+                        v-model="buyTriggerPrice">
+                      </v-text-field>
+                    </v-flex>
+                    <v-flex>
+                      <v-subheader>Amount</v-subheader>
+                    </v-flex>
+                    <v-flex>
+                      <v-text-field
+                        color="blue"
+                        v-model="buyQuantity">
+                      </v-text-field>
+                    </v-flex>
+                    <v-flex>
+                      <v-subheader>Total</v-subheader>
+                    </v-flex>
+                    <v-flex>
+                      <v-text-field
+                        color="blue"
+                        v-model="computeBuyTotal">
+                      </v-text-field>
+                    </v-flex>
+                  </v-layout>
+                  <br>
+                  <v-btn @click="buytradeSubmit"> Buy </v-btn>
+                  <br>
+                </v-card>
+              </v-flex>
+              <v-flex xs6>
+                <v-card class="test">
+                  <h3> Sell </h3>
+                  <p>Available Balance</p>
+                  <p> {{ AvailableSellBalance }}</p>
+                  <v-text-field
+                    color="blue"
+                    label="Sell Price"
+                    v-model="sellPrice"
+                    placeholder=":sellPrice">>
+                    </v-text-field>
+                  <v-text-field
+                    color="blue"
+                    label="Trigger Sell Price"
+                    v-model="sellTriggerPrice">
+                    </v-text-field>
+                  <v-text-field
+                    color="blue"
+                    label="Amount"
+                    v-model="sellQuantity">
+                    </v-text-field>
+                  <v-text-field
+                    color="blue"
+                    label="Total"
+                    v-model="computeSellTotal">
+                    </v-text-field>
+                  <br>
+                  <v-btn @click="queryUserOrder"> Sell </v-btn>
+                  <br>
+                </v-card>
+              </v-flex>
+            </v-layout>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -76,18 +201,42 @@ export default {
   props: ['symbols'],
   data () {
     return {
-      message: '',
+      x: 'Limit',
+      items: [
+        'Limit',
+        'Stop_Loss_Limit'
+      ],
       symbol: '',
-      price: '',
-      priceaction: '',
-      quantity: '',
-
+      buyPrice: '',
+      sellPrice: '',
+      buyTriggerPrice: '',
+      sellTriggerPrice: '',
+      buyQuantity: '',
+      sellQuantity: '',
+      buyPercentage: '',
+      sellPercentage: '',
+      AvailableBuyBalance: '',
+      AvailableSellBalance: '',
+      sellTotal: '',
+      buyTotal: '',
+      tradeSide: '',
+      tradeType: '',
       errormessage: null
     }
   },
   mounted () {
     if (this.symbols) {
-      this.message = this.symbols
+      this.symbol = this.symbols
+      this.binance()
+      this.getMyAccountData()
+    }
+  },
+  computed: {
+    computeBuyTotal: function () {
+      return this.buyPrice * this.buyQuantity
+    },
+    computeSellTotal: function () {
+      return this.sellPrice * this.sellQuantity
     }
   },
 
@@ -96,15 +245,86 @@ export default {
       try {
         var coinPrice = ''
         await AuthenticationService.binance({
-          symbol: this.message
+          symbol: this.symbol
         })
           .then(function (response) {
-            coinPrice = response.data.something
+            coinPrice = response.data.singleCoinPrice
           }).catch(err => console.log(err))
-        this.price = coinPrice
         console.log(this.symbol + ' : ' + coinPrice)
+        this.buyPrice = coinPrice
+        this.sellPrice = coinPrice
       } catch (err) {
-        this.errormessage = err.response.data.something
+        this.errormessage = err.response.data
+      }
+    },
+    async getMyAccountData () {
+      try {
+        await AuthenticationService.getMyAccountData()
+          .then(response => {
+            var data = response.data.userBalance
+            var i
+            for (i = 0; i < data.length; i++) {
+              if (this.symbol.substr(0, 3).includes(data[i].asset)) {
+                this.AvailableSellBalance = data[i].free
+              }
+              if (this.symbol.substr(3, this.symbol.length).includes(data[i].asset)) {
+                this.AvailableBuyBalance = data[i].free
+              }
+            }
+          }).catch(err => console.log(err))
+      } catch (err) {
+        this.errormessage = err.response
+      }
+    },
+    async buytradeSubmit () {
+      await this.getMyAccountData()
+      if (this.AvailableBuyBalance >= (this.buyQuantity * this.buyPrice)) {
+        await AuthenticationService.tradeSubmit({
+          symbol: this.symbol,
+          quantity: this.buyQuantity,
+          price: this.buyPrice,
+          side: 'BUY',
+          tradeType: this.x.toUpperCase(),
+          stopPrice: this.buyTriggerPrice
+        })
+          .then(response => {
+            if (response.status === 200) {
+              console.log('Your Order has been placed to Binance')
+              this.getMyAccountData()
+            }
+          })
+      } else {
+        console.log('Sorry you dont have enough USDT to complete this trade')
+      }
+      this.getMyAccountData()
+    },
+    async selltradeSubmit () {
+      try {
+        await AuthenticationService.tradeSubmit({
+          symbol: this.symbol,
+          quantity: this.sellQuantity,
+          price: this.sellPrice,
+          side: 'SELL',
+          tradeType: this.x.toUpperCase()
+        })
+          .then(response => {
+            console.log(response.data.tradeMakerData)
+          })
+      } catch (err) {
+        this.errormessage = err.response
+      }
+    },
+
+    async queryUserOrder () {
+      try {
+        await AuthenticationService.queryUserOrder({
+          symbol: this.symbol
+        })
+          .then(response => {
+            console.log(response.data.UserOrder)
+          })
+      } catch (err) {
+        this.errormessage = err.response
       }
     }
   }
@@ -114,4 +334,7 @@ export default {
  .error {
    color:black;
    }
+.test {
+  padding: 16px;
+}
 </style>

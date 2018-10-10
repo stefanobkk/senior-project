@@ -30,11 +30,27 @@ export default {
     return Api().post('/myaccount', credentials)
   },
 
-  // addWallet (credentials) {
-  //   return Api().post('/myaccount', credentials)
-  // },
-
   getMyAccountData () {
     return Api().get('/mybalance')
+  },
+
+  tradeSubmit (credentials) {
+    return Api().get('/trade1', {
+      params: {
+        symbol: credentials.symbol,
+        quantity: credentials.quantity,
+        price: credentials.price,
+        side: credentials.side,
+        tradeType: credentials.tradeType,
+        stopPrice: credentials.stopPrice
+      }
+    })
+  },
+  queryUserOrder (credentials) {
+    return Api().get('/trade2', {
+      params: {
+        symbol: credentials.symbol
+      }
+    })
   }
 }

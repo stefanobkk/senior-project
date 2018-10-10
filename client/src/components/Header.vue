@@ -8,7 +8,7 @@
 
     <v-toolbar-items>
       <v-btn flat>
-        <router-link to="login" >
+        <router-link to="/login" >
           Login
         </router-link>
       </v-btn>
@@ -16,7 +16,7 @@
 
     <v-toolbar-items>
       <v-btn flat>
-        <router-link to="register" >
+        <router-link to="/register" >
           Register
         </router-link>
       </v-btn>
@@ -24,7 +24,7 @@
 
     <v-toolbar-items>
       <v-btn flat>
-        <router-link to="trade" >
+        <router-link to="/trade" >
           Trade
         </router-link>
       </v-btn>
