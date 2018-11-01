@@ -3,7 +3,6 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
 const { sequelize } = require('./models')
-const binance = require('./controller/binanceController')
 
 const app = express() // creates the express server and assign it to app.
 
@@ -19,5 +18,3 @@ sequelize.sync().then(() => {
   app.listen(port)
   console.log(`Server started on port ${port}`)
 })
-
-console.log(binance)

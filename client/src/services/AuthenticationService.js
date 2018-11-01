@@ -9,16 +9,25 @@ export default {
     return Api().post('/login', credentials)
   },
 
-  binance (credentials) {
-    return Api().get('/trade', {
+  getCurrentPriceSingleCoin (credentials) {
+    return Api().get('/tradeBinance', {
       params: {
-        symbol: credentials.symbol
+        symbol: credentials.symbol,
+        exchange: credentials.exchange
       }
     })
   },
 
   binanceData () {
-    return Api().get('/homepage', {
+    return Api().get('/homepageBinanceData', {
+      params: {
+        symbol: null
+      }
+    })
+  },
+
+  bittrexData () {
+    return Api().get('/homepageBittrexData', {
       params: {
         symbol: null
       }
@@ -30,8 +39,13 @@ export default {
     return Api().post('/myaccount', credentials)
   },
 
-  getMyAccountData () {
-    return Api().get('/mybalance')
+  getBalance (credentials) {
+    return Api().get('/mybalance', {
+      params: {
+        symbol: credentials.symbol,
+        exchange: credentials.exchange
+      }
+    })
   },
 
   tradeSubmit (credentials) {
@@ -46,10 +60,22 @@ export default {
       }
     })
   },
-  queryUserOrder (credentials) {
+  getCoinInfo (credentials) {
     return Api().get('/trade2', {
       params: {
-        symbol: credentials.symbol
+        symbol: credentials.symbol,
+        exchange: credentials.exchange
+      }
+    })
+  },
+
+  getOrders (credentials) {
+    return Api().get('/trade3', {
+      params: {
+        limit: 20,
+        getOrderType: credentials.getOrderType,
+        symbol: credentials.symbol,
+        coinSymbolInfo: credentials.coinSymbolInfo
       }
     })
   }

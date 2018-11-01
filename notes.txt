@@ -1,0 +1,6 @@
+Trade
+
+- On Page Laod we get the coinInfo which gets the symbols that an exchange contains. This is later used by getOrders function.
+  to check if the coins with balance is actually a coin inside the exchange.
+
+- 

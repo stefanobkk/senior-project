@@ -59,50 +59,100 @@
     <br>
     <br>
       <v-tabs
-        v-model="active"
         color="cyan"
         dark
         grow
         slider-color="yellow">
         <v-tab
-          v-for="n in 3"
-          :key="n"
+          v-for="name in exchangeName"
+          @click.prevent="setActiveTabName(name)"
+          :key="name"
           ripple>
-          Item {{ n }}
+          {{ name }}
         </v-tab>
         <v-tab-item
           v-for="n in 3"
           :key="n">
           <v-card flat>
             <v-card-text>
-              <v-card>
-              <v-card-title>
-                Frontpage
-                <v-spacer></v-spacer>
-                <v-text-field
-                  v-model="search"
-                  append-icon="search"
-                  label="Search"
-                  single-line
-                  hide-details
-                ></v-text-field>
-              </v-card-title>
-              <v-data-table
-                :headers="headers"
-                :items="binanceDataArray"
-                :search="search">
-                  <template slot="items" slot-scope="props">
-                    <tr @click="toTradeRouter(props.item.symbol)">
-                    <td class="text-xs-left">{{ props.item.symbol }}</td>
-                    <td class="text-xs-left">{{ props.item.lastPrice }}</td>
-                    <td class="text-xs-left">{{ props.item.priceChangePercent }}</td>
-                    <td class="text-xs-left">{{ props.item.volume }}</td>
-                    <td class="text-xs-left">{{ props.item.weightedAvgPrice }}</td>
-                    </tr>
-                  </template>
-                <v-alert slot="no-results" :value="true" color="error" icon="warning">
-                  Your search for "{{ search }}" found no results.
-                </v-alert>
+              <v-card v-show="activeTabName === 'Binance'">
+                <v-card-title>
+                  <v-text-field
+                    v-model="search"
+                    append-icon="search"
+                    label="Search"
+                    single-line
+                    hide-details
+                  ></v-text-field>
+                </v-card-title>
+                <v-data-table
+                  :headers="headers"
+                  :items="binanceDataArray"
+                  :search="search">
+                    <template slot="items" slot-scope="props">
+                      <tr @click="toTradeRouter(props.item.symbol, activeTabName)">
+                      <td class="text-xs-left">{{ props.item.symbol }}</td>
+                      <td class="text-xs-left">{{ props.item.lastPrice }}</td>
+                      <td class="text-xs-left">{{ props.item.priceChangePercent }}</td>
+                      <td class="text-xs-left">{{ props.item.volume }}</td>
+                      <td class="text-xs-left">{{ props.item.weightedAvgPrice }}</td>
+                      </tr>
+                    </template>
+                  <v-alert slot="no-results" :value="true" color="error" icon="warning">
+                    Your search for "{{ search }}" found no results.
+                  </v-alert>
+              </v-data-table>
+            </v-card>
+            <v-card v-show="activeTabName === 'Bittrex'">
+                <v-card-title>
+                  <v-text-field
+                    v-model="search"
+                    append-icon="search"
+                    label="Search"
+                    single-line
+                    hide-details
+                  ></v-text-field>
+                </v-card-title>
+                <v-data-table
+                  :headers="bittrexHeaders"
+                  :items="bittrexDataArray"
+                  :search="search">
+                    <template slot="items" slot-scope="props">
+                      <tr @click="toTradeRouter(props.item.MarketName, activeTabName)">
+                      <td class="text-xs-left">{{ props.item.MarketName }}</td>
+                      <td class="text-xs-left">{{ props.item.Last }}</td>
+                      <td class="text-xs-left">{{ props.item.Volume }}</td>
+                      </tr>
+                    </template>
+                  <v-alert slot="no-results" :value="true" color="error" icon="warning">
+                    Your search for "{{ search }}" found no results.
+                  </v-alert>
+              </v-data-table>
+            </v-card>
+            <v-card v-show="activeTabName === 'Bx.in.th'">
+                <v-card-title>
+                  <v-text-field
+                    v-model="search"
+                    append-icon="search"
+                    label="Search"
+                    single-line
+                    hide-details
+                  ></v-text-field>
+                </v-card-title>
+                <v-data-table
+                  :headers="headers"
+                  :items="bittrexDataArray"
+                  :search="search">
+                    <template slot="items" slot-scope="props">
+                      <tr @click="toTradeRouter(props.item.symbol)">
+                      <td class="text-xs-left">{{ props.item.symbol }}</td>
+                      <td class="text-xs-left">{{ props.item.lastPrice }}</td>
+                      <td class="text-xs-left">{{ props.item.volume }}</td>
+                      </tr>
+                    </template>
+                  <v-alert slot="no-results" :value="true" color="error" icon="warning">
+                    Your search for "{{ search }}" found no results.
+                  </v-alert>
               </v-data-table>
             </v-card>
             </v-card-text>
@@ -120,13 +170,13 @@ export default {
   name: 'trade',
   data () {
     return {
+      activeTabName: 'Binance',
       symbol: '',
       price: '',
       volume: '',
       data: null,
       priceChangePercent: '',
       weightedAvgPrice: '',
-      active: 0,
       search: '',
       headers: [
         { text: 'Symbol', value: 'symbol' },
@@ -135,10 +185,23 @@ export default {
         { text: '24Hr volume ', value: 'volume' },
         { text: 'Weighted Average Price', value: 'weightedAvgPrice' }
       ],
-      binanceDataArray: []
+      bittrexHeaders: [
+        { text: 'Symbol', value: 'MarketName' },
+        { text: 'Latest Price', value: 'Last' },
+        { text: '24Hr volume ', value: 'Volume' }
+      ],
+      binanceDataArray: [],
+      exchangeName: ['Binance', 'Bittrex', 'BX.in.th'],
+      bittrexDataArray: []
     }
   },
   methods: {
+    setActiveTabName (name) {
+      this.activeTabName = name
+    },
+    displayContents (name) {
+      return this.activeTabName === name
+    },
     async binanceData () {
       try {
         await AuthenticationService.binanceData()
@@ -153,11 +216,45 @@ export default {
         this.errormessage = err.response.data.something
       }
     },
-    toTradeRouter (id) {
-      this.$router.push({ name: 'trade', params: { symbols: id } })
+
+    async bittrexData () {
+      try {
+        await AuthenticationService.bittrexData()
+          .then(response => {
+            var data = response.data.something
+            var x
+            for (x in data) {
+              this.bittrexDataArray.push(data[x])
+            }
+            var i
+            for (i in this.bittrexDataArray) {
+              if (this.bittrexDataArray[i].MarketName.substr(0, 3) === 'BTC') {
+                var splitsBTC = this.bittrexDataArray[i].MarketName.split('-')[1]
+                var newCoinSymbol = splitsBTC + 'BTC'
+                this.bittrexDataArray[i].MarketName = newCoinSymbol
+              }
+              if (this.bittrexDataArray[i].MarketName.substr(0, 3) === 'ETH') {
+                var splitsETH = this.bittrexDataArray[i].MarketName.split('-')[1]
+                var newCoinSymbolETH = splitsETH + 'ETH'
+                this.bittrexDataArray[i].MarketName = newCoinSymbolETH
+              }
+              if (this.bittrexDataArray[i].MarketName.substr(0, 4) === 'USDT') {
+                var splitsUSDT = this.bittrexDataArray[i].MarketName.split('-')[1]
+                var newCoinSymbolUSDT = splitsUSDT + 'USDT'
+                this.bittrexDataArray[i].MarketName = newCoinSymbolUSDT
+              }
+            }
+          }).catch(err => console.log(err))
+      } catch (err) {
+        this.errormessage = err.response.data.something
+      }
+    },
+    toTradeRouter (id, activeTabName) {
+      this.$router.push({name: 'trade', params: { symbols: id, exchange: activeTabName }})
     }
   },
   beforeMount () {
+    this.bittrexData()
     this.binanceData()
   }
 }

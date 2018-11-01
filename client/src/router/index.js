@@ -26,7 +26,7 @@ export default new Router({
       component: Login
     },
     {
-      path: '/trade/:symbols',
+      path: '/trade/:exchange/:symbols',
       name: 'trade',
       component: Trade,
       props: true

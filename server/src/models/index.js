@@ -3,8 +3,6 @@ const path = require('path')
 const Sequelize = require('sequelize')
 const db = {}
 
-console.log('inside the index.js file')
-
 const sequelize = new Sequelize({
   databsae: process.env.DB_NAME || 'db_name',
   username: process.env.DB_USER || 'username',
